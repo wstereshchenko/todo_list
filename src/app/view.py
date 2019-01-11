@@ -23,7 +23,7 @@ class RegistrationForm(FlaskForm):
 
 class LoginForm(FlaskForm):
     username = StringField('Имя пользователя', validators=[DataRequired()])
-    password = StringField('Пароль', validators=[DataRequired()])
+    password = PasswordField('Пароль', validators=[DataRequired()])
     submit = SubmitField('Войти')
 
 
@@ -45,11 +45,12 @@ class EditForm(FlaskForm):
 def index():
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(head=form.head_post.data, body=form.body_post.data, user_id=current_user.id)
+        post = Post(head=form.head_post.data, body=form.body_post.data, user_id=current_user.id, timestamp=datetime.now())
         post.store_to_db()
         return redirect(url_for('index'))
-    posts = Post.query.filter_by(user_id=current_user.id).all()[:3]
-
+    posts = Post.query.filter_by(user_id=current_user.id).all()
+    posts.reverse()
+    posts = posts[0:3]
     return render_template('index.html', form=form, posts=posts)
 
 
@@ -101,6 +102,7 @@ def del_task(id):
 @login_required
 def all_post():
     posts = Post.query.filter_by(user_id=current_user.id).all()
+    posts.reverse()
     return render_template('all_post.html', posts=posts)
 
 
