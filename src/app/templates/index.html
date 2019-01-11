@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+    List
+
+{% endblock %}
+
+{% block content %}
+<h1>Лист заданий {{ current_user.username }}</h1>
+<hr>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.head_post.label }}
+            {{ form.head_post(size=38) }}
+            {% for error in form.head_post.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.body_post.label }}<br>
+            {{ form.body_post(cols=50, rows=3) }}<br>
+            {% for error in form.body_post.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+<hr>
+<h1>Задания</h1><br>
+{% if posts %}
+{% for post in posts %}
+<p><b>{{ post.head }}</b> - {{ post.timestamp }}<br>
+{{ post.body }}<br>
+    <a href="{{ url_for('del_task', id = post.id) }}" >Удалить</a> |
+    <a href="{{ url_for('edit_task', id = post.id) }}" >Изменить</a></p>
+{% endfor %}
+<p><a href="{{ url_for('all_post') }}">Посмотреть все записи!</a></p>
+{% else %}
+<p>Записей пока нет</p>
+{% endif %}
+{% endblock %}
