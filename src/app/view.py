@@ -112,7 +112,6 @@ def edit_task(id):
     post = Post.query.filter_by(id=id).first()
     form = EditForm(head_post=post.head, body_post=post.body)
     posts = Post.query.filter_by(user_id=current_user.id).all()[:3]
-    print(id)
     if form.validate_on_submit():
         Post.query.filter_by(id=id).update({Post.head: form.head_post.data})
         Post.query.filter_by(id=id).update({Post.body: form.body_post.data})
